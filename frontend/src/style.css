@@ -1,6 +1,33 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/container-queries';
+@plugin '@tailwindcss/aspect-ratio';
+@plugin '@tailwindcss/typography';
+
+@theme {
+  --font-sans:
+    'Noto Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 /* cyrillic-ext */
 @font-face {
@@ -88,7 +115,7 @@ html {
 }
 
 button {
-    @apply bg-gray-900 text-gray-100 px-4 py-1.5 rounded border border-gray-800 mx-2 my-1 transition-colors hover:bg-gray-800;
+    @apply bg-gray-900 text-gray-100 px-4 py-1.5 rounded-sm border border-gray-800 mx-2 my-1 transition-colors hover:bg-gray-800;
 }
 button.primary {
     @apply bg-blue-700 text-gray-100 border-blue-600 hover:bg-blue-600;
@@ -98,7 +125,7 @@ input {
     @apply text-gray-900;
 }
 input:not([type="radio"]):not([type="checkbox"]) {
-    @apply rounded;
+    @apply rounded-sm;
 }
 label {
     @apply block;

@@ -1,7 +1,7 @@
 import {useRef} from "react";
 
 const Settings = ({settings, onUpdate, onClose}) => {
-    return <div className="px-8 pt-4 absolute inset-0 overflow-y-auto bg-gray-900 text-gray-100 bg-opacity-80 backdrop-blur z-50">
+    return <div className="px-8 pt-4 absolute inset-0 overflow-y-auto bg-gray-900 text-gray-100 bg-opacity-80 backdrop-blur-sm z-50">
         <h1 className="text-4xl">Settings</h1>
 
         <form onSubmit={e => {
