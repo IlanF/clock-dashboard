@@ -44,9 +44,14 @@ const Weather = ({settings}) => {
 
     useEffect(() => {
         const timer = setInterval(updateWeather, updateIntervalMinutes * 60 * 1000)
-        if(!currentWeather || DateTime.fromISO(currentWeather.current.time, {zone: currentWeather.timezone}).diffNow(currentWeather.current_units.interval) >= currentWeather.current.interval) {
+        if(!currentWeather){
             updateWeather();
         }
+
+        const diffNow = DateTime.fromISO(currentWeather.current.time, {zone: currentWeather.timezone}).diffNow(currentWeather.current_units.interval);
+         if (diffNow < 0 || diffNow >= currentWeather.current.interval) {
+             updateWeather();
+         }
 
         if(currentWeather) {
             const timeLeft = DateTime.fromISO(currentWeather.current.time, {zone: currentWeather.timezone}).plus({ [currentWeather.current_units.interval]: currentWeather.current.interval}).diffNow(currentWeather.current_units.interval);

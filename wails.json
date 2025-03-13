@@ -9,5 +9,10 @@
   "author": {
     "name": "Ilan Firsov",
     "email": "IlanF@users.noreply.github.com"
+  },
+  "info": {
+    "companyName": "Ilan Firsov",
+    "ProductName": "Clock Dashboard",
+    "ProductVersion": "0.0.1"
   }
 }
