@@ -31,16 +31,12 @@ const App = () => {
 
             {showSettings && <Settings settings={settings} onUpdate={newSettings => {setSettings(newSettings); setShowSettings(false)}} onClose={() => setShowSettings(false)} />}
 
-            <div className="flex items-start justify-around text-light font-sans">
-                <div className="py-0 flex">
-                    <div className="ml-auto">
-                        <Clock settings={settings} />
-                    </div>
+            <div className="flex items-start justify-around text-light font-sans gap-x-8">
+                <div className="py-0">
+                    <Clock settings={settings} />
                 </div>
-                <div className="mt-2 flex">
-                    <div className="mr-auto">
-                        <Weather settings={settings} />
-                    </div>
+                <div className="mt-2">
+                    <Weather settings={settings} />
                 </div>
             </div>
         </div>

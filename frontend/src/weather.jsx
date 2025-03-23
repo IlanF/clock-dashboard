@@ -1,7 +1,5 @@
-import weatherCodeIcons from "./assets/weather-icons.json";
 import {DateTime} from "luxon";
-import {useEffect, useState} from 'react';
-import Icon from "./components/icon.jsx";
+import {Fragment, useEffect, useState} from 'react';
 import WeatherIcon from "./components/weather-icon.jsx";
 
 const updateIntervalMinutes = 15;
@@ -90,25 +88,25 @@ const Weather = ({settings}) => {
     }
 
     return <>
-        <div className="text-7xl">
+        <div className="text-7xl text-center">
             <WeatherIcon className="mb-2" size={14} type={currentWeather.current?.weather_code} />
             <span className="inline-block mx-1">{Math.round(convertTemp((currentWeather.current?.temperature_2m || 0), currentWeather.current_units.temperature_2m, settings.temp_unit))}&deg;</span>
         </div>
 
-        <div className="mt-4 flex space-x-8">
-            <div>
-                {next8hours.map(hour => <div className="flex items-center" key={hour.time.toISOTime()}>
-                    <span className="opacity-40 mr-auto">{hour.time.diffNow('hours') < 1 ? 'Now' : hour.time.toLocaleString(DateTime.TIME_24_SIMPLE)}</span>
-                    <WeatherIcon className="mx-2 my-0.5" type={hour.weather_code} />
-                    <span>{Math.round(convertTemp(hour.temperature_2m, currentWeather.hourly_units.temperature_2m, settings.temp_unit))}&deg;</span>
-                </div>)}
+        <div className="mt-4 grid grid-cols-2 grid-rows-8 gap-x-8 gap-y-2">
+            <div className="grid row-span-full grid-rows-subgrid grid-cols-[2fr_1fr_1fr] gap-x-2">
+                {next8hours.map(hour => <Fragment key={hour.time.toISOTime()}>
+                    <span className="ml-auto opacity-40">{hour.time.diffNow('hours') < 1 ? 'Now' : hour.time.toLocaleString(DateTime.TIME_24_SIMPLE)}</span>
+                    <WeatherIcon className="mx-auto" type={hour.weather_code} />
+                    <span className="mr-auto">{Math.round(convertTemp(hour.temperature_2m, currentWeather.hourly_units.temperature_2m, settings.temp_unit))}&deg;</span>
+                </Fragment>)}
             </div>
-            <div>
-                {currentWeather.daily.time.map((date, index) => <div className="flex items-center" key={date}>
-                    <span className="opacity-40 mr-auto">{date === DateTime.now().setZone(currentWeather.timezone).toISODate() ? 'Today' : DateTime.fromISO(date, {zone: currentWeather.timezone}).setZone().toFormat('EEE')}</span>
-                    <WeatherIcon className="mx-2 my-0.5" type={currentWeather.daily.weather_code[index]} />
-                    <span className="">{Math.round(convertTemp(currentWeather.daily.temperature_2m_min[index], currentWeather.daily_units.temperature_2m_min, settings.temp_unit))}&deg; &ndash; {Math.round(convertTemp(currentWeather.daily.temperature_2m_max[index], currentWeather.daily_units.temperature_2m_min, settings.temp_unit))}&deg;</span>
-                </div>)}
+            <div className="grid row-span-full grid-rows-subgrid grid-cols-[1fr_1fr_2fr] gap-x-2">
+                {currentWeather.daily.time.map((date, index) => <Fragment key={date}>
+                    <span className="ml-auto opacity-40">{date === DateTime.now().setZone(currentWeather.timezone).toISODate() ? 'Today' : DateTime.fromISO(date, {zone: currentWeather.timezone}).setZone().toFormat('EEE')}</span>
+                    <WeatherIcon className="mx-auto" type={currentWeather.daily.weather_code[index]} />
+                    <span className="mr-auto">{Math.round(convertTemp(currentWeather.daily.temperature_2m_min[index], currentWeather.daily_units.temperature_2m_min, settings.temp_unit))}&deg; &ndash; {Math.round(convertTemp(currentWeather.daily.temperature_2m_max[index], currentWeather.daily_units.temperature_2m_min, settings.temp_unit))}&deg;</span>
+                </Fragment>)}
             </div>
         </div>
     </>;
