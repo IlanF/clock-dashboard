@@ -8,10 +8,15 @@ const Settings = ({settings, onUpdate, onClose}) => {
                   newSettings.lat = parseFloat(newSettings.lat);
                   newSettings.lon = parseFloat(newSettings.lon);
 
+                  if(settings.first_run) {
+                      newSettings.first_run = false;
+                  }
+
                   onUpdate(newSettings);
               }}
+              className="flex flex-wrap mt-4"
         >
-            <fieldset className="mt-4">
+            <fieldset className="w-1/2">
                 <legend className="text-xl text-emerald-400">Clock</legend>
 
                 <fieldset className="mt-2">
@@ -27,7 +32,7 @@ const Settings = ({settings, onUpdate, onClose}) => {
                 </fieldset>
             </fieldset>
 
-            <fieldset className="mt-4">
+            <fieldset className="w-1/2">
                 <legend className="text-xl text-emerald-400">Weather</legend>
 
                 <fieldset className="mt-2">
@@ -56,7 +61,7 @@ const Settings = ({settings, onUpdate, onClose}) => {
                 </fieldset>
             </fieldset>
 
-            <div className="flex items-center mt-4">
+            <div className="w-full flex items-center my-4">
                 <button type="submit" className="primary">
                     Save
                 </button>

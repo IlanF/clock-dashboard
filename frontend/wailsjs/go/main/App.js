@@ -6,6 +6,14 @@ export function GetSettings() {
   return window['go']['main']['App']['GetSettings']();
 }
 
-export function SetSettings(arg1, arg2) {
-  return window['go']['main']['App']['SetSettings'](arg1, arg2);
+export function LoadSettings() {
+  return window['go']['main']['App']['LoadSettings']();
+}
+
+export function SaveSettings() {
+  return window['go']['main']['App']['SaveSettings']();
+}
+
+export function SetSettings(arg1) {
+  return window['go']['main']['App']['SetSettings'](arg1);
 }

@@ -46,6 +46,15 @@ const Weather = ({settings}) => {
             updateWeather();
         }
 
+        const oldLat = parseFloat(currentWeather.latitude)
+        const oldLon = parseFloat(currentWeather.longitude)
+        const newLat = parseFloat(settings.lat)
+        const newLon = parseFloat(settings.lon)
+
+        if(Math.abs(newLat - oldLat) >= 0.01 || Math.abs(newLon - oldLon) >= 0.01) {
+            updateWeather();
+        }
+
         const diffNow = DateTime.fromISO(currentWeather.current.time, {zone: currentWeather.timezone}).diffNow(currentWeather.current_units.interval);
          if (diffNow < 0 || diffNow >= currentWeather.current.interval) {
              updateWeather();

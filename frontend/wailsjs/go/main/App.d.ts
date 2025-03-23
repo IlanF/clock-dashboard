@@ -3,4 +3,8 @@
 
 export function GetSettings():Promise<string>;
 
-export function SetSettings(arg1:string,arg2:any):Promise<string>;
+export function LoadSettings():Promise<void>;
+
+export function SaveSettings():Promise<void>;
+
+export function SetSettings(arg1:string):Promise<string>;

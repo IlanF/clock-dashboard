@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {GetSettings} from "../wailsjs/go/main/App";
+import {GetSettings, SetSettings as SetBackendSettings} from "../wailsjs/go/main/App";
 import Clock from './clock';
 import Weather from './weather';
 import Icon from "./components/icon.jsx";
@@ -10,8 +10,15 @@ const App = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [settings, setSettings] = useState({})
     useEffect(() => {
+        SetBackendSettings(JSON.stringify(settings))
+    }, [settings])
+    useEffect(() => {
         GetSettings().then(data => {
-            setSettings(JSON.parse(data))
+            data = JSON.parse(data)
+            setSettings(data)
+            if(data.first_run) {
+                setShowSettings(true)
+            }
             setIsLoading(false)
         });
     }, []);

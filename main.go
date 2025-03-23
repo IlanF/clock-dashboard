@@ -3,6 +3,7 @@ package main
 import (
 	"embed"
 	"fmt"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"net/http"
 	"os"
 	"strings"
@@ -70,6 +71,10 @@ func main() {
 	})
 
 	if err != nil {
-		println("Error:", err.Error())
+		_, _ = runtime.MessageDialog(app.ctx, runtime.MessageDialogOptions{
+			Type:          runtime.ErrorDialog,
+			Title:         "Application Error",
+			Message:       err.Error(),
+		})
 	}
 }
