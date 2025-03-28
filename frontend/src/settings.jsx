@@ -1,5 +1,8 @@
+import {ToggleFullscreen} from "../wailsjs/go/main/App";
+import {Fullscreen, LogOut, Save, X} from "lucide-react";
+
 const Settings = ({settings, onUpdate, onClose}) => {
-    return <div className="px-8 pt-4 absolute inset-0 overflow-y-auto bg-gray-900 text-gray-100 bg-opacity-80 backdrop-blur-sm z-50">
+    return <div className="flex flex-col px-8 pt-4 absolute inset-0 overflow-y-auto bg-gray-900 text-gray-100 bg-opacity-80 backdrop-blur-sm z-50">
         <h1 className="text-4xl">Settings</h1>
 
         <form onSubmit={e => {
@@ -15,7 +18,7 @@ const Settings = ({settings, onUpdate, onClose}) => {
 
                   onUpdate(newSettings);
               }}
-              className="flex flex-wrap mt-4"
+              className="flex flex-wrap pt-4 max-w-[1280px] max-h-[720px] mx-auto my-auto"
         >
             <fieldset className="w-1/2">
                 <legend className="text-xl text-emerald-400">Clock</legend>
@@ -62,15 +65,23 @@ const Settings = ({settings, onUpdate, onClose}) => {
                 </fieldset>
             </fieldset>
 
-            <div className="w-full flex items-center my-4">
+            <div className="w-full flex justify-between items-center mt-12 mb-4">
                 <button type="submit" className="primary">
+                    <Save className="me-2" />
                     Save
                 </button>
                 <button type="button" onClick={onClose}>
+                    <X className="me-2" />
                     Cancel
                 </button>
 
-                <button type="button" className="danger" onClick={() => window.runtime.Quit()}>
+                <button type="button" onClick={() => ToggleFullscreen()}>
+                    <Fullscreen className="me-2" />
+                    Toggle Fullscreen
+                </button>
+
+                <button type="button" className="ms-auto danger" onClick={() => window.runtime.Quit()}>
+                    <LogOut className="me-2" />
                     Exit
                 </button>
             </div>

@@ -17,3 +17,7 @@ export function SaveSettings() {
 export function SetSettings(arg1) {
   return window['go']['main']['App']['SetSettings'](arg1);
 }
+
+export function ToggleFullscreen() {
+  return window['go']['main']['App']['ToggleFullscreen']();
+}

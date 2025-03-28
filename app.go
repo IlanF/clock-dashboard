@@ -133,3 +133,11 @@ func (a *App) SaveSettings() {
 		panic("Error saving config file: "+err.Error())
 	}
 }
+
+func (a *App) ToggleFullscreen() {
+	if runtime.WindowIsFullscreen(a.ctx) {
+		runtime.WindowUnfullscreen(a.ctx)
+	} else {
+		runtime.WindowFullscreen(a.ctx)
+	}
+}

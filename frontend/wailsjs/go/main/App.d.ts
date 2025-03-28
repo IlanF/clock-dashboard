@@ -8,3 +8,5 @@ export function LoadSettings():Promise<void>;
 export function SaveSettings():Promise<void>;
 
 export function SetSettings(arg1:string):Promise<string>;
+
+export function ToggleFullscreen():Promise<void>;

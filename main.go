@@ -41,24 +41,15 @@ func main() {
 	// Create an instance of the app structure
 	app := NewApp()
 
-	fullscreen := false
-	frameless := false
-	windowStartState := options.Normal
-	if len(os.Getenv("devserver")) == 0 {
-		fullscreen = true
-		frameless = true
-		windowStartState = options.Maximised
-	}
-
 	// Create application with options
 	err := wails.Run(&options.App{
 		Title:         "clock-dashboard",
 		Width:         800,
 		Height:        480,
 		DisableResize: false,
-		Fullscreen:         fullscreen,
-		WindowStartState:   windowStartState,
-		Frameless: frameless,
+		Fullscreen:         false,
+		WindowStartState:   options.Normal,
+		Frameless: false,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 			Handler: NewFileLoader(),
