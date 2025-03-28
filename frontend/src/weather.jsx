@@ -1,6 +1,7 @@
 import {DateTime} from "luxon";
 import {Fragment, useEffect, useState} from 'react';
 import WeatherIcon from "./components/weather-icon.jsx";
+import {Sunrise, Sunset} from "lucide-react";
 
 const updateIntervalMinutes = 15;
 const weatherFields = {
@@ -39,6 +40,8 @@ const Weather = ({settings}) => {
 
     const [currentWeather, setCurrentWeather] = useState(JSON.parse(localStorage.getItem('weather')));
     const [next8hours, setNext8hours] = useState([])
+    const [sunrise, setSunrise] = useState('')
+    const [sunset, setSunset] = useState('')
 
     useEffect(() => {
         const timer = setInterval(updateWeather, updateIntervalMinutes * 60 * 1000)
@@ -93,6 +96,18 @@ const Weather = ({settings}) => {
         }
 
         setNext8hours(next8hours)
+
+        const todayIndex = currentWeather.daily.sunrise.findIndex(d => DateTime.fromISO(DateTime.fromISO(d, {zone: currentWeather.timezone}).toISODate() === DateTime.now().setZone(currentWeather.timezone).toISODate()))
+        setSunrise(DateTime.fromISO(currentWeather.daily.sunrise[todayIndex], {zone: currentWeather.timezone}).setZone().toLocaleString({
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: settings.clock_type === '12',
+        }),)
+        setSunset(DateTime.fromISO(currentWeather.daily.sunset[todayIndex], {zone: currentWeather.timezone}).setZone().toLocaleString({
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: settings.clock_type === '12',
+        }))
     }, [currentWeather]);
 
     if (!currentWeather || !currentWeather.current) {
@@ -100,9 +115,19 @@ const Weather = ({settings}) => {
     }
 
     return <>
-        <div className="text-7xl text-center">
-            <WeatherIcon className="mb-2" size={14} type={currentWeather.current?.weather_code} />
-            <span className="inline-block mx-1">{Math.round(convertTemp((currentWeather.current?.temperature_2m || 0), currentWeather.current_units.temperature_2m, settings.temp_unit))}&deg;</span>
+        <div className="text-7xl text-center flex items-center justify-center">
+            <WeatherIcon className="" size={14} type={currentWeather.current?.weather_code} />
+            <span className="inline-block mx-2">{Math.round(convertTemp((currentWeather.current?.temperature_2m || 0), currentWeather.current_units.temperature_2m, settings.temp_unit))}&deg;</span>
+            <div className="ml-2 flex flex-col text-xs space-y-2.5 pt-2 text-slate-300 opacity-80">
+                <span>
+                    <Sunrise size="1.5em" className="me-1 -mt-1" />
+                    {sunrise.replace(/([AP]M)/, ' $1')}
+                </span>
+                <span>
+                    <Sunset size="1.5em" className="me-1 -mt-1" />
+                    {sunset.replace(/([AP]M)/, ' $1')}
+                </span>
+            </div>
         </div>
 
         <div className="mt-4 grid grid-cols-2 grid-rows-8 gap-x-8 gap-y-2">
@@ -121,6 +146,9 @@ const Weather = ({settings}) => {
                 </Fragment>)}
             </div>
         </div>
+        {/*<div className="flex justify-between mt-4">*/}
+        {/*    {[0, 1, 2, 3, 45, 51, 61, 71, 80, 85, 95, 100].map(t => <WeatherIcon className="mx-auto" type={t} />)}*/}
+        {/*</div>*/}
     </>;
 }
 

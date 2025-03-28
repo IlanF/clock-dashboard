@@ -20,20 +20,20 @@ const WeatherIcon = ({size, type, ...props}) => {
   switch(type) {
     //0:            Clear sky
     case 0:
-      return <Sun color={colors.amber["300"]} size={size} {...props} />
+      return <Sun size={size} {...props} />
 
     //1, 2, 3:      Mainly clear, partly cloudy, and overcast
     case 1:
-      return <Sun color={colors.sky["200"]} size={size} {...props} />
+      return <Sun size={size} {...props} />
     case 2:
-      return <CloudSun color={colors.sky["300"]} size={size} {...props} />
+      return <CloudSun size={size} {...props} />
     case 3:
-      return <Cloudy color={colors.sky["400"]} size={size} {...props} />
+      return <Cloudy size={size} {...props} />
 
     //45, 48:       Fog and depositing rime fog
     case 45:
     case 48:
-      return <CloudFog color={colors.sky["700"]} size={size} {...props} />
+      return <CloudFog size={size} {...props} />
 
     //51, 53, 55:   Drizzle: Light, moderate, and dense intensity
     case 51:
@@ -42,7 +42,7 @@ const WeatherIcon = ({size, type, ...props}) => {
     //56, 57:       Freezing Drizzle: Light and dense intensity
     case 56:
     case 57:
-      return <CloudDrizzle color={colors.sky["700"]} size={size} {...props} />
+      return <CloudDrizzle size={size} {...props} />
 
     //61, 63, 65:   Rain: Slight, moderate and heavy intensity
     case 61:
@@ -51,7 +51,7 @@ const WeatherIcon = ({size, type, ...props}) => {
     //66, 67:       Freezing Rain: Light and heavy intensity
     case 66:
     case 67:
-      return <CloudRain color={colors.sky["700"]} size={size} {...props} />
+      return <CloudRain size={size} {...props} />
 
     //71, 73, 75:   Snow fall: Slight, moderate, and heavy intensity
     case 71:
@@ -59,18 +59,18 @@ const WeatherIcon = ({size, type, ...props}) => {
     case 75:
     //77:           Snow grains
     case 77:
-      return <CloudSnow color={colors.sky["700"]} size={size} {...props} />
+      return <CloudSnow size={size} {...props} />
 
     //80, 81, 82:   Rain showers: Slight, moderate, and violent
     case 80:
     case 81:
     case 82:
-      return <CloudRain color={colors.sky["700"]} size={size} {...props} />
+      return <CloudRain size={size} {...props} />
 
     //85, 86:       Snow showers slight and heavy
     case 85:
     case 86:
-      return <CloudSnow color={colors.sky["700"]} size={size} {...props} />
+      return <CloudSnow size={size} {...props} />
 
     //***:          (*) Thunderstorm forecast with hail is only available in Central Europe
     //95:           * Thunderstorm: Slight or moderate
@@ -78,10 +78,10 @@ const WeatherIcon = ({size, type, ...props}) => {
     //96, 99:       * Thunderstorm with slight and heavy hail
     case 96:
     case 99:
-      return <CloudLightning color={colors.red["700"]} size={size} {...props} />
+      return <CloudLightning size={size} {...props} />
 
     default:
-      return <CircleHelp size={size} {...props} />
+      return <CircleHelp color={colors.slate['500']} size={size} {...props} />
   }
 };
 

@@ -144,4 +144,97 @@
   label {
       @apply block;
   }
+
+
+
+  svg.lucide-sun {
+    @apply stroke-yellow-400
+  }
+  svg.lucide-sun circle {
+    @apply fill-yellow-400
+  }
+
+  svg.lucide-cloud-sun {
+    @apply stroke-yellow-400
+  }
+  svg.lucide-cloud-sun path:nth-child(5) {
+    @apply fill-yellow-400
+  }
+  svg.lucide-cloud-sun path:last-child {
+    @apply fill-white stroke-white
+  }
+
+  svg.lucide-cloudy {
+    @apply stroke-white
+  }
+  svg.lucide-cloudy path:first-child {
+    @apply fill-white
+  }
+  svg.lucide-cloudy path:last-child {
+    @apply stroke-slate-400 translate-x-[3px] translate-y-[-3px] rotate-12
+  }
+
+  svg.lucide-cloud-fog {
+    @apply stroke-slate-400
+  }
+  svg.lucide-cloud-fog path:not(:first-child) {
+    @apply stroke-blue-200
+  }
+
+  svg.lucide-cloud-drizzle {
+    @apply stroke-slate-400
+  }
+  svg.lucide-cloud-drizzle path:not(:first-child) {
+    @apply stroke-blue-400
+  }
+  svg.lucide-cloud-rain, svg.lucide-cloud-rain {
+    @apply stroke-slate-400
+  }
+  svg.lucide-cloud-rain path:not(:first-child), svg.lucide-cloud-rain path:not(:first-child) {
+    @apply stroke-blue-500
+  }
+
+  svg.lucide-cloud-snow {
+    @apply stroke-slate-400
+  }
+  svg.lucide-cloud-snow path:not(:first-child) {
+    @apply stroke-white
+  }
+
+  svg.lucide-cloud-lightning {
+    @apply stroke-slate-400
+  }
+  svg.lucide-cloud-lightning path:last-child {
+    @apply stroke-yellow-400
+  }
+
+  svg.lucide-sunrise {
+    @apply stroke-white
+  }
+  svg.lucide-sunrise path:nth-child(2),
+  svg.lucide-sunrise path:nth-child(3),
+  svg.lucide-sunrise path:nth-child(4),
+  svg.lucide-sunrise path:nth-child(5),
+  svg.lucide-sunrise path:nth-child(8)
+  {
+    @apply stroke-yellow-400
+  }
+  svg.lucide-sunrise path:nth-child(8) {
+    @apply fill-yellow-400
+  }
+
+  svg.lucide-sunset {
+    @apply stroke-white
+  }
+  svg.lucide-sunset path:nth-child(2),
+  svg.lucide-sunset path:nth-child(3),
+  svg.lucide-sunset path:nth-child(4),
+  svg.lucide-sunset path:nth-child(5),
+  svg.lucide-sunset path:nth-child(8)
+  {
+    @apply stroke-yellow-400
+  }
+  svg.lucide-sunset path:nth-child(8) {
+    @apply fill-yellow-400
+  }
 }
