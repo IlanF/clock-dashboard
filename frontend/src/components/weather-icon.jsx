@@ -1,6 +1,16 @@
 import PropTypes from "prop-types";
 import colors from 'tailwindcss/colors';
-import {Sun, CloudSun, Cloudy, CloudDrizzle, CloudRain, CloudSnow, CloudLightning, CircleHelp} from 'lucide-react';
+import {
+  Sun,
+  CloudSun,
+  Cloudy,
+  CloudDrizzle,
+  CloudRain,
+  CloudSnow,
+  CloudLightning,
+  CircleHelp,
+  CloudFog
+} from 'lucide-react';
 
 const WeatherIcon = ({size, type, ...props}) => {
   size = (size ? (size / 4) * 16 : 1.5 * 16);
