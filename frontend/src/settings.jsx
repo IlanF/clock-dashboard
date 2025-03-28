@@ -9,6 +9,7 @@ const Settings = ({settings, onUpdate, onClose}) => {
                   newSettings.lon = parseFloat(newSettings.lon);
 
                   if(settings.first_run) {
+                      localStorage.removeItem('weather')
                       newSettings.first_run = false;
                   }
 
