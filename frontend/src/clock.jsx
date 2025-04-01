@@ -1,11 +1,16 @@
 import {DateTime} from "luxon";
 import {useEffect, useState} from 'react';
 
-const Clock = ({settings}) => {
+const Clock = ({settings, onClockTick}) => {
     const [currentTime, setCurrentTime] = useState(DateTime.now())
+
     useEffect(() => {
+        onClockTick(currentTime)
+
         const timer = setInterval(() => {
-            setCurrentTime(DateTime.now())
+            const now = DateTime.now()
+            setCurrentTime(now)
+            onClockTick(now)
         }, 1000)
         return () => {
             clearInterval(timer)
