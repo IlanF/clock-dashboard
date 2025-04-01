@@ -20,47 +20,41 @@ const Settings = ({settings, onUpdate, onClose}) => {
               }}
               className="flex flex-wrap pt-4 max-w-[1280px] max-h-[720px] mx-auto my-auto"
         >
-            <fieldset className="w-1/2">
+            <fieldset className="w-1/2 space-y-4">
                 <legend className="text-xl text-emerald-400">Clock</legend>
 
-                <fieldset className="mt-2">
-                    <legend>Type</legend>
-                    <label className="mr-4 inline-block">
-                        <input type="radio" name="clock_type" value="12" defaultChecked={settings.clock_type === "12"} />
-                        <span className="ml-1 align-middle">12 Hours</span>
-                    </label>
-                    <label className="mr-4 inline-block">
-                        <input type="radio" name="clock_type" value="24" defaultChecked={settings.clock_type === "24"} />
-                        <span className="ml-1 align-middle">24 Hours</span>
-                    </label>
-                </fieldset>
+                <div>
+                    <label>Type</label>
+                    <select name="clock_type" className="w-1/2">
+                        <option value="12" selected={settings.clock_type === '12'}>12 Hours</option>
+                        <option value="24" selected={settings.clock_type === '24'}>24 Hours</option>
+                    </select>
+                </div>
             </fieldset>
 
-            <fieldset className="w-1/2">
+            <fieldset className="w-1/2 space-y-4">
                 <legend className="text-xl text-emerald-400">Weather</legend>
 
-                <fieldset className="mt-2">
-                    <legend>Unit</legend>
-                    <label className="mr-4 inline-block">
-                        <input type="radio" name="temp_unit" value="c" defaultChecked={settings.temp_unit === "c"} />
-                        <span className="ml-1 align-middle">Celsius</span>
-                    </label>
-                    <label className="mr-4 inline-block">
-                        <input type="radio" name="temp_unit" value="f" defaultChecked={settings.temp_unit === "f"} />
-                        <span className="ml-1 align-middle">Farenheit</span>
-                    </label>
-                </fieldset>
+                <div>
+                    <label>Unit</label>
+                    <select name="temp_unit" className="w-1/2">
+                        <option value="c" selected={settings.temp_unit === 'c'}>Celsius</option>
+                        <option value="f" selected={settings.temp_unit === 'f'}>Farenheit</option>
+                    </select>
+                </div>
 
-                <fieldset className="mt-2">
+                <fieldset className="">
                     <legend>Location</legend>
 
-                    <div className="mr-4 inline-block">
-                        <label>Latitude</label>
-                        <input type="text" name="lat" defaultValue={settings.lat} />
-                    </div>
-                    <div className="mr-4 inline-block">
-                        <label>Longtitude</label>
-                        <input type="text" name="lon" defaultValue={settings.lon} />
+                    <div className="flex space-x-2">
+                        <div className="">
+                            <label className="text-sm text-slate-400">Latitude</label>
+                            <input type="text" name="lat" defaultValue={settings.lat} />
+                        </div>
+                        <div className="">
+                            <label className="text-sm text-slate-400">Longtitude</label>
+                            <input type="text" name="lon" defaultValue={settings.lon} />
+                        </div>
                     </div>
                 </fieldset>
             </fieldset>

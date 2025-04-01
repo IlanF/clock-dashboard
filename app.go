@@ -16,6 +16,7 @@ type AppSettings struct {
 	Locale string  `json:"locale"`
 	TempUnit string `json:"temp_unit"`
 	ClockType string `json:"clock_type"`
+	Fullscreen bool `json:"fullscreen"`
 }
 
 // App struct
@@ -42,9 +43,14 @@ func (a *App) startup(ctx context.Context) {
 		Locale: "en",
 		TempUnit: "c",
 		ClockType: "24",
+		Fullscreen: false,
 	}
 
 	a.LoadSettings()
+
+	if a.settings.Fullscreen {
+		runtime.WindowFullscreen(a.ctx)
+	}
 }
 
 // GetSettings returns a the application settings
@@ -79,7 +85,6 @@ func (a *App) LoadSettings() {
 	}
 
 	configPath := path.Join(homeDir, ".config", "clock-dashboard.json")
-	fmt.Println(configPath)
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		a.SaveSettings()
 	}
@@ -108,8 +113,6 @@ func (a *App) LoadSettings() {
 			panic("Error decoding app config: "+err.Error())
 		}
 	}
-
-	fmt.Println("settings:", a.settings)
 }
 
 func (a *App) SaveSettings() {
@@ -137,7 +140,11 @@ func (a *App) SaveSettings() {
 func (a *App) ToggleFullscreen() {
 	if runtime.WindowIsFullscreen(a.ctx) {
 		runtime.WindowUnfullscreen(a.ctx)
+		a.settings.Fullscreen = false
 	} else {
 		runtime.WindowFullscreen(a.ctx)
+		a.settings.Fullscreen = true
 	}
+
+	a.SaveSettings()
 }

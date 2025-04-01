@@ -118,7 +118,7 @@ const Weather = ({settings}) => {
         <div className="text-7xl text-center flex items-center justify-center">
             <WeatherIcon className="" size={14} type={currentWeather.current?.weather_code} />
             <span className="inline-block mx-2">{Math.round(convertTemp((currentWeather.current?.temperature_2m || 0), currentWeather.current_units.temperature_2m, settings.temp_unit))}&deg;</span>
-            <div className="ml-2 flex flex-col text-xs space-y-2.5 pt-2 text-slate-300 opacity-80">
+            <div className="ms-4 flex flex-col text-sm space-y-2.5 pt-2 text-slate-300 opacity-80">
                 <span>
                     <Sunrise size="1.5em" className="me-1 -mt-1" />
                     {sunrise.replace(/([AP]M)/, ' $1')}

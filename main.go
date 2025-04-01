@@ -13,14 +13,6 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
-type FileLoader struct {
-    http.Handler
-}
-
-func NewFileLoader() *FileLoader {
-    return &FileLoader{}
-}
-
 func main() {
 	// Create an instance of the app structure
 	app := NewApp()

@@ -132,11 +132,11 @@
   }
 
 
-  input {
+  input, select, textarea {
       @apply text-gray-900;
   }
-  input:not([type="radio"]):not([type="checkbox"]) {
-      @apply rounded-sm;
+  input:not([type="radio"]):not([type="checkbox"]), select, textarea {
+      @apply rounded-sm w-full;
   }
   input[type="radio"], input[type="checkbox"] {
     @apply bg-blue-900 border-blue-700 checked:bg-blue-700 checked:border-blue-600;
