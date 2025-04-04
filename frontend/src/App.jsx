@@ -3,8 +3,8 @@ import {GetSettings, SetSettings as SetBackendSettings} from "../wailsjs/go/main
 import Clock from './clock';
 import Weather from './weather';
 import Settings from "./settings.jsx";
+import Calendar from "./calendar.jsx";
 import {Settings2} from "lucide-react";
-import {DateTime} from "luxon";
 
 const App = () => {
     const [showSettings, setShowSettings] = useState(false)
@@ -60,6 +60,7 @@ const App = () => {
             <div className="max-w-[1280px] max-h-[720px] mx-auto my-auto flex items-start justify-around text-light font-sans gap-x-8">
                 <div className="py-0">
                     <Clock settings={settings} /*onClockTick={updateBackgroundImage}*/ />
+                    <Calendar settings={settings} />
                 </div>
                 <div className="mt-2">
                     <Weather settings={settings} />

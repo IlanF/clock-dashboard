@@ -17,6 +17,8 @@ type AppSettings struct {
 	TempUnit string `json:"temp_unit"`
 	ClockType string `json:"clock_type"`
 	Fullscreen bool `json:"fullscreen"`
+	CalendarApiKey string `json:"google_calendar_api_key"`
+	CalendarsList []string `json:"google_calendars_list"`
 }
 
 // App struct
@@ -44,6 +46,8 @@ func (a *App) startup(ctx context.Context) {
 		TempUnit: "c",
 		ClockType: "24",
 		Fullscreen: false,
+		CalendarApiKey: "",
+		CalendarsList: make([]string, 0),
 	}
 
 	a.LoadSettings()
