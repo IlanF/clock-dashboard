@@ -67,11 +67,11 @@ const Calendar = ({settings}) => {
         <div className="mx-1.5 text-sm">
             {events.slice(0, 7).map(event => {
                 const date = DateTime.fromISO(event.start);
-                const today = date.toISODate() === DateTime.now().toISODate()
+                const diff = Math.round(date.diff(DateTime.now(), 'days').as('days'));
 
                 return <div key={event.id} className="w-full flex justify-between">
-                    <span className="text-sm font-semibold text-slate-400 me-2">
-                        {today ? 'Today' : date.toLocaleString({month: 'long', day: 'numeric'})}
+                    <span className="text-sm font-semibold text-slate-400 me-2 capitalize">
+                        {diff >= 3 ? date.toLocaleString({month: 'long', day: 'numeric'}) : date.toRelativeCalendar()}
                     </span>
                     <span className="text-slate-300">{event.label}</span>
                 </div>;
