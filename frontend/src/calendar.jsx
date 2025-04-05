@@ -50,12 +50,6 @@ const Calendar = ({settings}) => {
         return () => {
             clearInterval(timer)
         }
-    }, []);
-
-    useEffect(() => {
-        if(calendarData && JSON.stringify(settings.google_calendars_list) !== JSON.stringify(calendarData.calendars)) {
-            updateCalendar();
-        }
     }, [settings]);
 
     if(events.length <= 0) {
