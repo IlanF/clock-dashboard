@@ -14,8 +14,6 @@ jobs:
     - uses: actions/checkout@v4
       with:
         submodules: recursive
-    - uses: actions/upload-artifact@v4
-    - uses: actions/download-artifact@v4
 
     - name: Install Package
       uses: ConorMacBride/install-package@v1.1.0
@@ -23,7 +21,7 @@ jobs:
         apt: 'libwebkit2gtk-4.1-dev'
 
     - name: Wails Build
-      uses: dAppServer/wails-build-action@v2.2
+      uses: dAppServer/wails-build-action@main
       with:
         build: true
         wails-version: 'v2.9.0'
