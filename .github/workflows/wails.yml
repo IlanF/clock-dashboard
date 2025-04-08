@@ -21,7 +21,7 @@ jobs:
         apt: 'libwebkit2gtk-4.1-dev'
 
     - name: Wails Build
-      uses: dAppServer/wails-build-action@v3
+      uses: dAppServer/wails-build-action@v2.2
       with:
         build: true
         node-version: '^22.14'
