@@ -9,23 +9,22 @@ on:
 jobs:
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04-arm
     steps:
     - uses: actions/checkout@v4
       with:
         submodules: recursive
 
-    - name: Install Package
-      uses: ConorMacBride/install-package@v1.1.0
-      with:
-        apt: 'libwebkit2gtk-4.1-dev'
+    # - name: Install Package
+    #   uses: ConorMacBride/install-package@v1.1.0
+    #   with:
+    #     apt: 'libwebkit2gtk-4.1-dev'
 
     - name: Wails Build
       uses: dAppServer/wails-build-action@main
       with:
         build: true
-        wails-version: 'v2.9.0'
         node-version: '^22.14'
         build-platform: 'linux/arm64'
         build-name: 'clock-dashboard'
-        build-tags: 'webkit2_41'
+        # build-tags: 'webkit2_41'
