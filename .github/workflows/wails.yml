@@ -1,0 +1,22 @@
+name: Wails
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Wails Build
+      uses: The-Egg-Corp/wails-build-action@v1.4
+      with:
+        build: true
+        node-version: '^22.14'
+        build-platform: 'linux/arm64'
+        build-name: 'clock-dashboard'
