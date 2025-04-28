@@ -2,10 +2,18 @@
 
 ## About
 
-This is the official Wails React template.
+A small project to add a clock to my computer table.
 
-You can configure the project by editing `wails.json`. More information about the project settings can be found
-here: https://wails.io/docs/reference/project-config
+Running on a Raspberry PI with a touchscreen.
+
+![Image](https://github.com/user-attachments/assets/9fb1c0ed-0c5b-464e-b0ec-96681ddce6aa)
+
+### Parts used if you wanted to replicate:
+- Raspberry PI 3B+
+- [BTT TFT50](https://biqu.equipment/products/bigtreetech-pi-tft43-v2-0-screen-board)
+- [Raspberry Pi 3B+ with BTT TFT50 Screen Enclosure ](https://www.printables.com/model/810131-raspberry-pi-3b-with-btt-tft50-screen-enclosure-kl) (Had to modify a little bit with a file for my v1.2 screen)
+
+The OS was set to launch the app on startup.
 
 ## Live Development
 
