@@ -51,7 +51,7 @@ const App = () => {
 
     return <div className="bg-cover bg-no-repeat fixed inset-0" /*style={{backgroundImage: `url(${bgImage})`}}*/>
         <div className="flex p-8 bg-slate-900 fixed inset-0">
-            <button type="button" className="fixed top-4 right-4 rounded-full px-2.5 py-2 bg-slate-700/55 border-0" onClick={() => setShowSettings(true)}>
+            <button type="button" className="z-50 fixed top-4 right-4 rounded-full px-2.5 py-2 bg-slate-700/55 border-0" onClick={() => setShowSettings(true)}>
                 <Settings2 size={24}/>
             </button>
 

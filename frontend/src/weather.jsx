@@ -2,6 +2,7 @@ import {DateTime} from "luxon";
 import {Fragment, useEffect, useState} from 'react';
 import WeatherIcon from "./components/weather-icon.jsx";
 import {Sunrise, Sunset} from "lucide-react";
+import OfflineIndicator from "./components/offline-indicator.jsx";
 
 const updateIntervalMinutes = 15;
 const weatherFields = {
@@ -114,7 +115,7 @@ const Weather = ({settings}) => {
         return;
     }
 
-    return <>
+    return <OfflineIndicator>
         <div className="text-7xl text-center flex items-center justify-center">
             <WeatherIcon className="" size={14} type={currentWeather.current?.weather_code} />
             <span className="inline-block mx-2">{Math.round(convertTemp((currentWeather.current?.temperature_2m || 0), currentWeather.current_units.temperature_2m, settings.temp_unit))}&deg;</span>
@@ -149,7 +150,7 @@ const Weather = ({settings}) => {
         {/*<div className="flex justify-between mt-4">*/}
         {/*    {[0, 1, 2, 3, 45, 51, 61, 71, 80, 85, 95, 100].map(t => <WeatherIcon className="mx-auto" type={t} />)}*/}
         {/*</div>*/}
-    </>;
+    </OfflineIndicator>;
 }
 
 export default Weather

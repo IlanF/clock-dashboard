@@ -58,7 +58,7 @@ const Clock = ({settings, onClockTick = () => {}}) => {
             </span>)}
         </div>
 
-        <div className="mt-2 mx-1.5 text-left">{currentTime.toLocaleString(DateTime.DATE_FULL)}</div>
+        <div className="mt-2 mb-4 mx-1.5 text-left">{currentTime.toLocaleString(DateTime.DATE_FULL)}</div>
     </>;
 }
 export default Clock

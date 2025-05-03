@@ -1,5 +1,6 @@
 import {DateTime} from "luxon";
 import {useEffect, useState} from 'react';
+import OfflineIndicator from "./components/offline-indicator.jsx";
 
 const updateIntervalMinutes = 60;
 
@@ -56,8 +57,8 @@ const Calendar = ({settings}) => {
         return null;
     }
 
-    return <>
-        <div className="mx-1.5 mt-4 font-semibold text-slate-200">Upcoming:</div>
+    return <OfflineIndicator>
+        <div className="mx-1.5 font-semibold text-slate-200">Upcoming:</div>
         <div className="mx-1.5 text-sm">
             {events.slice(0, 7).map(event => {
                 const date = DateTime.fromISO(event.start);
@@ -71,6 +72,6 @@ const Calendar = ({settings}) => {
                 </div>;
             })}
         </div>
-    </>;
+    </OfflineIndicator>;
 }
 export default Calendar
