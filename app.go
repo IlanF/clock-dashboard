@@ -9,6 +9,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"log"
 	"os"
+	"os/exec"
 	"path"
 )
 
@@ -36,6 +37,32 @@ func NewApp(version string) *App {
 	return &App{version: version}
 }
 
+func (a *App) restart() error {
+	execPath, err := os.Executable()
+	if err != nil {
+		return err
+	}
+
+
+	var cmd *exec.Cmd
+	env := runtime.Environment(a.ctx)
+	switch env.Platform {
+	case "windows":
+		cmd = exec.Command("cmd", "/C", "start", "", execPath)
+	default:
+		cmd = exec.Command(execPath)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+	}
+
+	err = cmd.Start()
+	if err != nil {
+		return err
+	}
+
+	os.Exit(0)
+	return nil
+}
 func (a *App) doSelfUpdate() {
     v, err := semver.Parse(a.version)
 	if err != nil {
@@ -55,7 +82,7 @@ func (a *App) doSelfUpdate() {
 		_, _ = runtime.MessageDialog(a.ctx, runtime.MessageDialogOptions{
 			Type:          runtime.InfoDialog,
 			Title:         "Automatic Update",
-			Message:       fmt.Sprintf("Current binary is the latest version %s", a.version),
+			Message:       fmt.Sprintf("Current binary is the latest version %s.", a.version),
 		})
 
 		return
@@ -67,8 +94,17 @@ func (a *App) doSelfUpdate() {
 	_, _ = runtime.MessageDialog(a.ctx, runtime.MessageDialogOptions{
 		Type:          runtime.InfoDialog,
 		Title:         "Automatic Update",
-		Message:       fmt.Sprintf("Successfully updated to version %s", latest.Version.String()),
+		Message:       fmt.Sprintf("Successfully updated to version %s.\nApplication will now restart.", latest.Version.String()),
 	})
+
+	err = a.restart()
+	if err != nil {
+		_, _ = runtime.MessageDialog(a.ctx, runtime.MessageDialogOptions{
+			Type:          runtime.ErrorDialog,
+			Title:         "Application Restart Failed",
+			Message:       fmt.Sprintf("Could not restart the application:\n%s\nPlease exit the application and launch it again.", err.Error()),
+		})
+	}
 }
 
 // startup is called when the app starts. The context is saved
