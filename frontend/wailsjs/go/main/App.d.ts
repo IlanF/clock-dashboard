@@ -3,6 +3,8 @@
 
 export function GetSettings():Promise<string>;
 
+export function GetVersion():Promise<string>;
+
 export function LoadSettings():Promise<void>;
 
 export function SaveSettings():Promise<void>;

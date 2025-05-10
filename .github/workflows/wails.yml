@@ -1,30 +1,63 @@
 name: Wails
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  release:
+    types: [ published ]
+
+env:
+  # Necessary for most environments as build failure can occur due to OOM issues
+  NODE_OPTIONS: "--max-old-space-size=4096"
 
 jobs:
-
   build:
-    runs-on: ubuntu-22.04-arm
+    strategy:
+    # Failure in one platform build won't impact the others
+      fail-fast: false
+      matrix:
+        build:
+#          - platform: 'linux/amd64'
+#            os: 'ubuntu-22.04'
+#          - platform: 'windows/amd64'
+#            os: 'windows-latest'
+          - platform: 'linux/arm64'
+            os: 'ubuntu-22.04-arm'
+    runs-on: ${{ matrix.build.os }}
     steps:
     - uses: actions/checkout@v4
       with:
         submodules: recursive
 
-    # - name: Install Package
-    #   uses: ConorMacBride/install-package@v1.1.0
-    #   with:
-    #     apt: 'libwebkit2gtk-4.1-dev'
+    - name: Extract Release Tag
+      id: vars
+      run: |
+        echo "tag=${GITHUB_REF##*/}" >> "$GITHUB_OUTPUT"
 
     - name: Wails Build
       uses: dAppServer/wails-build-action@main
       with:
         build: true
         node-version: '^22.14'
-        build-platform: 'linux/arm64'
+        build-platform: ${{ matrix.build.platform }}
         build-name: 'clock-dashboard'
-        # build-tags: 'webkit2_41'
+        build-flags: "--ldflags=-X 'main.version=${{ steps.vars.outputs.tag }}'"
+
+    - name: Rename binary
+      run: |
+        APP_NAME="clock-dashboard"
+        GOOS=$(echo "${{ matrix.build.platform }}" | cut -d'/' -f1)
+        GOARCH=$(echo "${{ matrix.build.platform }}" | cut -d'/' -f2)
+        BIN_NAME="${APP_NAME}"
+        [[ "$GOOS" == "windows" ]] && BIN_NAME="${APP_NAME}.exe"
+
+        mv build/${GOOS}_${GOARCH}/${BIN_NAME} ./${BIN_NAME}
+        ZIP_NAME="${APP_NAME}_${GOOS}_${GOARCH}.zip"
+        zip "$ZIP_NAME" "$BIN_NAME"
+
+        echo "zip_name=$ZIP_NAME" >> $GITHUB_ENV
+
+    - name: Upload Release Asset
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ${{ env.zip_name }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

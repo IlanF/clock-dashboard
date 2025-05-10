@@ -4,7 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/blang/semver"
+	"github.com/rhysd/go-github-selfupdate/selfupdate"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
+	"log"
 	"os"
 	"path"
 )
@@ -25,11 +28,47 @@ type AppSettings struct {
 type App struct {
 	ctx      context.Context
 	settings AppSettings
+	version string
 }
 
 // NewApp creates a new App application struct
-func NewApp() *App {
-	return &App{}
+func NewApp(version string) *App {
+	return &App{version: version}
+}
+
+func (a *App) doSelfUpdate() {
+    v, err := semver.Parse(a.version)
+	if err != nil {
+		log.Printf("Could not parse version string '%s'\n", a.version)
+		return
+	}
+
+    latest, err := selfupdate.UpdateSelf(v, "IlanF/clock-dashboard")
+    if err != nil {
+        log.Println("Binary update failed:", err)
+        return
+    }
+    if latest.Version.Equals(v) {
+        // latest version is the same as current version. It means current binary is up to date.
+        log.Println("Current binary is the latest version", a.version)
+
+		_, _ = runtime.MessageDialog(a.ctx, runtime.MessageDialogOptions{
+			Type:          runtime.InfoDialog,
+			Title:         "Automatic Update",
+			Message:       fmt.Sprintf("Current binary is the latest version %s", a.version),
+		})
+
+		return
+    }
+
+	log.Println("Successfully updated to version", latest.Version)
+	log.Println("Release note:\n", latest.ReleaseNotes)
+
+	_, _ = runtime.MessageDialog(a.ctx, runtime.MessageDialogOptions{
+		Type:          runtime.InfoDialog,
+		Title:         "Automatic Update",
+		Message:       fmt.Sprintf("Successfully updated to version %s", latest.Version.String()),
+	})
 }
 
 // startup is called when the app starts. The context is saved
@@ -55,6 +94,12 @@ func (a *App) startup(ctx context.Context) {
 	if a.settings.Fullscreen {
 		runtime.WindowFullscreen(a.ctx)
 	}
+
+	a.doSelfUpdate()
+}
+
+func (a *App) GetVersion() string {
+	return a.version
 }
 
 // GetSettings returns a the application settings

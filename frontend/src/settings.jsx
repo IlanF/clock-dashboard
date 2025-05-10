@@ -1,6 +1,6 @@
-import {ToggleFullscreen} from "../wailsjs/go/main/App";
+import {ToggleFullscreen, GetVersion} from "../wailsjs/go/main/App";
 import {Fullscreen, LogOut, Save, X} from "lucide-react";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 
 // https://gist.github.com/dhoeric/76bd1c15168ee0ee61ad3bf1730dcb65
 const calendarsList = {
@@ -10,6 +10,11 @@ const calendarsList = {
 };
 
 const Settings = ({settings: propSettings, onUpdate, onClose}) => {
+    const [appVersion, setAppVersion] = useState('0.0.0');
+    useEffect(() => {
+        GetVersion().then(setAppVersion)
+    }, [])
+
     const [settings, setSettings] = useState({
         first_run: propSettings.first_run || true,
         lat: propSettings.lat || '',
@@ -47,10 +52,8 @@ const Settings = ({settings: propSettings, onUpdate, onClose}) => {
         setSettings(newSettings)
     }
 
-    return <div className="flex flex-col px-8 pt-4 absolute inset-0 overflow-y-auto bg-gray-900 text-gray-100 bg-opacity-80 backdrop-blur-sm z-50">
-        <h1 className="text-4xl">Settings</h1>
-
-        <form onSubmit={e => {
+    return <form className="flex flex-col fixed inset-0 overflow-y-auto bg-gray-900 text-gray-100 bg-opacity-80 backdrop-blur-sm z-50"
+               onSubmit={e => {
                   e.preventDefault();
 
                   if(settings.first_run) {
@@ -61,8 +64,28 @@ const Settings = ({settings: propSettings, onUpdate, onClose}) => {
 
                   onUpdate(settings);
               }}
-              className="flex flex-wrap pt-4 max-w-[1280px] max-h-[720px] mx-auto my-auto"
-        >
+    >
+        <div className="bg-black/50 px-4 py-4">
+            <div className="flex justify-between">
+                <div>
+                    <h1 className="text-3xl">Settings</h1>
+                    <div className="text-xs text-slate-400">App Version {appVersion}</div>
+                </div>
+                <div>
+                    <button type="button" onClick={() => ToggleFullscreen()} className="text-xs px-1.5">
+                        <Fullscreen size="1.5em" className="me-2 -mt-0.5" />
+                        Toggle Fullscreen
+                    </button>
+
+                    <button type="button" className="ms-auto danger text-xs px-1.5" onClick={() => window.runtime.Quit()}>
+                        <LogOut size="1.5em" className="me-2 -mt-0.5" />
+                        Exit
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div className="w-full px-4 py-4 flex flex-wrap max-w-[1280px] max-h-[720px] overflow-y-auto mx-auto my-auto">
             <div className="w-1/2 space-y-4">
                 <fieldset className="space-y-4">
                     <legend className="text-xl text-emerald-400">Clock</legend>
@@ -121,7 +144,7 @@ const Settings = ({settings: propSettings, onUpdate, onClose}) => {
                 </fieldset>
             </fieldset>
 
-            <div className="w-full flex justify-between items-center mt-12 mb-4">
+            <div className="w-full py-4">
                 <button type="submit" className="primary">
                     <Save className="me-2" />
                     Save
@@ -130,18 +153,8 @@ const Settings = ({settings: propSettings, onUpdate, onClose}) => {
                     <X className="me-2" />
                     Cancel
                 </button>
-
-                <button type="button" onClick={() => ToggleFullscreen()}>
-                    <Fullscreen className="me-2" />
-                    Toggle Fullscreen
-                </button>
-
-                <button type="button" className="ms-auto danger" onClick={() => window.runtime.Quit()}>
-                    <LogOut className="me-2" />
-                    Exit
-                </button>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 }
 export default Settings;
