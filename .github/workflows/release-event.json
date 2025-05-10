@@ -4,6 +4,7 @@
         "name": "v0.1.0"
     },
     "repository": {
+        "name": "clock-dashboard",
         "full_name": "IlanF/clock-dashboard"
     }
 }

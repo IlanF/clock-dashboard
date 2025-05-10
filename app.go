@@ -130,7 +130,9 @@ func (a *App) startup(ctx context.Context) {
 	if a.settings.Fullscreen {
 		runtime.WindowFullscreen(a.ctx)
 	}
+}
 
+func (a *App) CheckForUpdates() {
 	a.doSelfUpdate()
 }
 

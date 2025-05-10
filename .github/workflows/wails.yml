@@ -10,11 +10,13 @@ permissions:
 env:
   # Necessary for most environments as build failure can occur due to OOM issues
   NODE_OPTIONS: "--max-old-space-size=4096"
+  # Override the application name, when left blank it defaults to repository name
+  APP_NAME: ""
 
 jobs:
   build:
     strategy:
-    # Failure in one platform build won't impact the others
+      # Failure in one platform build won't impact the others
       fail-fast: false
       matrix:
         build:
@@ -29,6 +31,30 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Set App Vars
+        id: vars
+        shell: bash
+        env:
+          PLATFORM: ${{ matrix.build.platform }}
+        run: |
+          if [ -z "${APP_NAME}" ]; then
+            APP_NAME="${{ github.event.repository.name }}"
+          fi
+          GOOS=$(echo "$PLATFORM" | cut -d'/' -f1)
+          GOARCH=$(echo "$PLATFORM" | cut -d'/' -f2)
+
+          BIN_NAME="$APP_NAME"
+          if [ "$GOOS" == "windows" ]; then
+            BIN_NAME="${APP_NAME}.exe"
+          fi
+
+          echo "app_name=${APP_NAME}" >> "$GITHUB_OUTPUT"
+          echo "bin_name=${BIN_NAME}" >> "$GITHUB_OUTPUT"
+          echo "goos=${GOOS}" >> "$GITHUB_OUTPUT"
+          echo "goarch=${GOARCH}" >> "$GITHUB_OUTPUT"
+          echo "tag=${GITHUB_REF##*/}" >> "$GITHUB_OUTPUT"
+
       - name: Linux Discovery
         if: runner.os == 'Linux'
         id: linux_discovery
@@ -63,39 +89,30 @@ jobs:
       - name: Install Wails CLI
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
-      - name: Extract Release Tag
-        shell: bash
-        id: vars
-        run: |
-          echo "tag=${GITHUB_REF##*/}" >> "$GITHUB_OUTPUT"
-
       - name: Wails Build
         shell: bash
+        env:
+          APP_NAME: ${{ steps.vars.outputs.app_name }}
+          BIN_NAME: ${{ steps.vars.outputs.bin_name }}
+          GOOS: ${{ steps.vars.outputs.goos }}
+          GOARCH: ${{ steps.vars.outputs.goarch }}
+          # Optional build tags (if needed, e.g., webkit2_41)
+          BUILD_TAGS: ""
         run: |
           export PATH=$PATH:$(go env GOPATH)/bin
-
-          GOOS=$(echo "${{ matrix.build.platform }}" | cut -d'/' -f1)
-          GOARCH=$(echo "${{ matrix.build.platform }}" | cut -d'/' -f2)
-
           echo "Building for $GOOS/$GOARCH"
-
-          # Set platform env vars for cross-compiling
-          export GOOS=$GOOS
-          export GOARCH=$GOARCH
-
-          # Optional build tags (if needed, e.g., webkit2_41)
-          BUILD_TAGS=""
-
-          wails build -tags "$BUILD_TAGS" -ldflags="-X 'main.version=${{ steps.vars.outputs.tag }}'"
+          wails build -tags "$BUILD_TAGS" -ldflags="-X 'main.version=${{ steps.vars.outputs.tag }}'" -o "${{ steps.vars.outputs.bin_name }}"
 
       - name: Rename binary
         shell: bash
+        env:
+          APP_NAME: ${{ steps.vars.outputs.app_name }}
+          BIN_NAME: ${{ steps.vars.outputs.bin_name }}
+          GOOS: ${{ steps.vars.outputs.goos }}
+          GOARCH: ${{ steps.vars.outputs.goarch }}
         run: |
-          APP_NAME="clock-dashboard"
-          GOOS=$(echo "${{ matrix.build.platform }}" | cut -d'/' -f1)
-          GOARCH=$(echo "${{ matrix.build.platform }}" | cut -d'/' -f2)
-          BIN_NAME="${APP_NAME}"
-          [[ "$GOOS" == "windows" ]] && BIN_NAME="${APP_NAME}.exe"
+          ls -la build
+          ls -la build/bin
 
           mkdir -p out
           mv build/bin/${BIN_NAME} ./out/${BIN_NAME}

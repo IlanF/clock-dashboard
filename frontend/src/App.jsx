@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {GetSettings, SetSettings as SetBackendSettings} from "../wailsjs/go/main/App";
+import {GetSettings, SetSettings as SetBackendSettings, CheckForUpdates} from "../wailsjs/go/main/App";
 import Clock from './clock';
 import Weather from './weather';
 import Settings from "./settings.jsx";
@@ -11,21 +11,27 @@ const App = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [settings, setSettings] = useState({})
 //    const [bgImage, setBgImage] = useState('/assets/images/hide-obara-TeX_yWATaBA-unsplash.jpg')
+    const [isCheckingUpdates, setIsCheckingUpdates] = useState(false);
 
     useEffect(() => {
         SetBackendSettings(JSON.stringify(settings))
     }, [settings])
 
     useEffect(() => {
-        GetSettings().then(data => {
-            data = JSON.parse(data)
-            setSettings(data)
-            if(data.first_run) {
-                setShowSettings(true)
-            }
-            setIsLoading(false)
-        });
-    }, []);
+        setIsCheckingUpdates(true);
+        CheckForUpdates().then(() => {
+            setIsCheckingUpdates(false);
+
+            GetSettings().then(data => {
+                data = JSON.parse(data)
+                setSettings(data)
+                if(data.first_run) {
+                    setShowSettings(true)
+                }
+                setIsLoading(false)
+            });
+        })
+    }, [])
 
 //    const updateBackgroundImage = currentTime => {
 //        currentTime = currentTime.toLocal();
@@ -42,6 +48,13 @@ const App = () => {
 //            setBgImage('/assets/images/benjamin-voros-U-Kty6HxcQc-unsplash.jpg')
 //        }
 //    }
+
+    if (isCheckingUpdates) {
+        return <div className="fixed inset-0 flex flex-col justify-center items-center text-center">
+            <div className="font-mono text-xs uppercase">Checking Updates...</div>
+        </div>;
+    }
+
 
     if (isLoading) {
         return <div className="fixed inset-0 flex flex-col justify-center items-center text-center">
