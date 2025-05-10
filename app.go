@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"regexp"
 )
 
 type AppSettings struct {
@@ -43,6 +44,11 @@ func (a *App) restart() error {
 		return err
 	}
 
+	// when updating the current executable path becomes /path/to/bin/.executable-name.exe.old
+	re := regexp.MustCompile(`^(.+?[\\/])\.(.+?)\.old$`)
+	if re.MatchString(execPath) {
+		execPath = re.ReplaceAllString(execPath, "$1$2")
+	}
 
 	var cmd *exec.Cmd
 	env := runtime.Environment(a.ctx)
