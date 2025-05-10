@@ -97,13 +97,17 @@ jobs:
           BIN_NAME="${APP_NAME}"
           [[ "$GOOS" == "windows" ]] && BIN_NAME="${APP_NAME}.exe"
 
-          ls -la build
-          ls -la build/bin
-          mv build/bin/${BIN_NAME} ./${BIN_NAME}
+          mkdir -p out
+          mv build/bin/${BIN_NAME} ./out/${BIN_NAME}
           ZIP_NAME="${APP_NAME}_${GOOS}_${GOARCH}.zip"
-          zip "$ZIP_NAME" "$BIN_NAME"
 
           echo "zip_name=$ZIP_NAME" >> $GITHUB_ENV
+
+          if [ "$GOOS" == "windows" ]; then
+            powershell.exe -Command "Compress-Archive -Path out/${BIN_NAME} -DestinationPath ${ZIP_NAME}"
+          else
+            zip -j "$ZIP_NAME" "out/${BIN_NAME}"
+          fi
 
       - name: Upload Release Asset
         if: github.event_name == 'release'
