@@ -39,7 +39,7 @@ jobs:
         node-version: '^22.14'
         build-platform: ${{ matrix.build.platform }}
         build-name: 'clock-dashboard'
-        build-flags: "--ldflags=-X 'main.version=${{ steps.vars.outputs.tag }}'"
+        build-tags: "-ldflags \"-X 'main.version=${{ steps.vars.outputs.tag }}'\""
 
     - name: Rename binary
       run: |
