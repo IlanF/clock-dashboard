@@ -79,11 +79,11 @@ func (a *App) doSelfUpdate() {
         // latest version is the same as current version. It means current binary is up to date.
         log.Println("Current binary is the latest version", a.version)
 
-		_, _ = runtime.MessageDialog(a.ctx, runtime.MessageDialogOptions{
-			Type:          runtime.InfoDialog,
-			Title:         "Automatic Update",
-			Message:       fmt.Sprintf("Current binary is the latest version %s.", a.version),
-		})
+//		_, _ = runtime.MessageDialog(a.ctx, runtime.MessageDialogOptions{
+//			Type:          runtime.InfoDialog,
+//			Title:         "Automatic Update",
+//			Message:       fmt.Sprintf("Current binary is the latest version %s.", a.version),
+//		})
 
 		return
     }
