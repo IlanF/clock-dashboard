@@ -4,6 +4,9 @@ on:
   release:
     types: [ published ]
 
+permissions:
+  contents: write
+
 env:
   # Necessary for most environments as build failure can occur due to OOM issues
   NODE_OPTIONS: "--max-old-space-size=4096"
@@ -86,6 +89,7 @@ jobs:
           wails build -tags "$BUILD_TAGS" -ldflags="-X 'main.version=${{ steps.vars.outputs.tag }}'"
 
       - name: Rename binary
+        shell: bash
         run: |
           APP_NAME="clock-dashboard"
           GOOS=$(echo "${{ matrix.build.platform }}" | cut -d'/' -f1)
@@ -102,6 +106,7 @@ jobs:
           echo "zip_name=$ZIP_NAME" >> $GITHUB_ENV
 
       - name: Upload Release Asset
+        if: github.event_name == 'release'
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ env.zip_name }}
