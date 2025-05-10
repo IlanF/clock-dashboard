@@ -17,47 +17,93 @@ jobs:
         build:
 #          - platform: 'linux/amd64'
 #            os: 'ubuntu-22.04'
-#          - platform: 'windows/amd64'
-#            os: 'windows-latest'
+          - platform: 'windows/amd64'
+            os: 'windows-latest'
           - platform: 'linux/arm64'
             os: 'ubuntu-22.04-arm'
     runs-on: ${{ matrix.build.os }}
     steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: recursive
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Linux Discovery
+        if: runner.os == 'Linux'
+        id: linux_discovery
+        run: |
+          sudo apt-get -yq update
+          DISTRO=$(lsb_release -rs) # Get the distribution version (e.g., "22.04", "24.04")
+          if [[ "$DISTRO" == "20.04" ]]; then
+            sudo apt-get -yq install libgtk-3-0 libwebkit2gtk-4.0-dev gcc-aarch64-linux-gnu
+          elif [[ "$DISTRO" == "22.04" ]]; then
+            sudo apt-get -yq install libgtk-3-0 libwebkit2gtk-4.0-dev gcc-aarch64-linux-gnu
+          elif [[ "$DISTRO" == "24.04" ]]; then
+            sudo apt-get -yq install libgtk-3-0 libwebkit2gtk-4.1-dev gcc-aarch64-linux-gnu
+          else
+            echo "Unsupported Linux distribution: $DISTRO"
+            exit 1 # Fail the workflow if the distribution is not supported
+          fi
+          echo "DISTRO=$DISTRO" >> "$GITHUB_OUTPUT"
+        shell: bash
 
-    - name: Extract Release Tag
-      id: vars
-      run: |
-        echo "tag=${GITHUB_REF##*/}" >> "$GITHUB_OUTPUT"
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          check-latest: true
+          cache-dependency-path: 'go.sum'
+          go-version: '1.23'
 
-    - name: Wails Build
-      uses: dAppServer/wails-build-action@main
-      with:
-        build: true
-        node-version: '^22.14'
-        build-platform: ${{ matrix.build.platform }}
-        build-name: 'clock-dashboard'
-        build-tags: "-ldflags \"-X 'main.version=${{ steps.vars.outputs.tag }}'\""
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
 
-    - name: Rename binary
-      run: |
-        APP_NAME="clock-dashboard"
-        GOOS=$(echo "${{ matrix.build.platform }}" | cut -d'/' -f1)
-        GOARCH=$(echo "${{ matrix.build.platform }}" | cut -d'/' -f2)
-        BIN_NAME="${APP_NAME}"
-        [[ "$GOOS" == "windows" ]] && BIN_NAME="${APP_NAME}.exe"
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
-        mv build/${GOOS}_${GOARCH}/${BIN_NAME} ./${BIN_NAME}
-        ZIP_NAME="${APP_NAME}_${GOOS}_${GOARCH}.zip"
-        zip "$ZIP_NAME" "$BIN_NAME"
+      - name: Extract Release Tag
+        shell: bash
+        id: vars
+        run: |
+          echo "tag=${GITHUB_REF##*/}" >> "$GITHUB_OUTPUT"
 
-        echo "zip_name=$ZIP_NAME" >> $GITHUB_ENV
+      - name: Wails Build
+        shell: bash
+        run: |
+          export PATH=$PATH:$(go env GOPATH)/bin
 
-    - name: Upload Release Asset
-      uses: softprops/action-gh-release@v1
-      with:
-        files: ${{ env.zip_name }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GOOS=$(echo "${{ matrix.build.platform }}" | cut -d'/' -f1)
+          GOARCH=$(echo "${{ matrix.build.platform }}" | cut -d'/' -f2)
+
+          echo "Building for $GOOS/$GOARCH"
+
+          # Set platform env vars for cross-compiling
+          export GOOS=$GOOS
+          export GOARCH=$GOARCH
+
+          # Optional build tags (if needed, e.g., webkit2_41)
+          BUILD_TAGS=""
+
+          wails build -tags "$BUILD_TAGS" -ldflags="-X 'main.version=${{ steps.vars.outputs.tag }}'"
+
+      - name: Rename binary
+        run: |
+          APP_NAME="clock-dashboard"
+          GOOS=$(echo "${{ matrix.build.platform }}" | cut -d'/' -f1)
+          GOARCH=$(echo "${{ matrix.build.platform }}" | cut -d'/' -f2)
+          BIN_NAME="${APP_NAME}"
+          [[ "$GOOS" == "windows" ]] && BIN_NAME="${APP_NAME}.exe"
+
+          ls -la build
+          ls -la build/bin
+          mv build/bin/${BIN_NAME} ./${BIN_NAME}
+          ZIP_NAME="${APP_NAME}_${GOOS}_${GOARCH}.zip"
+          zip "$ZIP_NAME" "$BIN_NAME"
+
+          echo "zip_name=$ZIP_NAME" >> $GITHUB_ENV
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ env.zip_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

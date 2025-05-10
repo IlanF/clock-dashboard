@@ -1,0 +1,9 @@
+{
+    "release": {
+        "tag_name": "0.1.0",
+        "name": "v0.1.0"
+    },
+    "repository": {
+        "full_name": "IlanF/clock-dashboard"
+    }
+}
