@@ -58,17 +58,17 @@ const Calendar = ({settings}) => {
     }
 
     return <OfflineIndicator>
-        <div className="mx-1.5 font-semibold text-slate-200">Upcoming:</div>
-        <div className="mx-1.5 text-sm">
-            {events.slice(0, 7).map(event => {
+        <div className="mx-1.5 mb-1 font-semibold text-slate-200 opacity-50">Upcoming</div>
+        <div className="mx-1.5 flex gap-x-6 overflow-hidden whitespace-nowrap">
+            {events.slice(0, 5).map(event => {
                 const date = DateTime.fromISO(event.start);
                 const diff = Math.round(date.diff(DateTime.now(), 'days').as('days'));
 
-                return <div key={event.id} className="w-full flex justify-between">
-                    <span className="text-sm font-semibold text-slate-400 me-2 capitalize">
-                        {diff >= 3 ? date.toLocaleString({month: 'long', day: 'numeric'}) : date.toRelativeCalendar()}
+                return <div key={event.id} className="flex flex-col">
+                    <span className="text-sm font-semibold text-slate-400 capitalize">
+                        {diff >= 3 ? date.toLocaleString({month: 'short', day: 'numeric'}) : date.toRelativeCalendar()}
                     </span>
-                    <span className="text-slate-300">{event.label}</span>
+                    <span className="text-slate-300 truncate max-w-[12rem]">{event.label}</span>
                 </div>;
             })}
         </div>

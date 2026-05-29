@@ -16,6 +16,7 @@ import (
 
 type AppSettings struct {
 	FirstRun bool `json:"first_run"`
+	OledMode bool `json:"oled_mode"`
 	Lat    float64 `json:"lat"`
 	Lon    float64 `json:"lon"`
 	Locale string  `json:"locale"`
@@ -121,6 +122,7 @@ func (a *App) startup(ctx context.Context) {
 	// set default settings
 	a.settings = AppSettings{
 		FirstRun: true,
+		OledMode: false,
 		Lat:    0,
 		Lon:    0,
 		Locale: "en",

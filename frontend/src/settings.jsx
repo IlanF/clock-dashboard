@@ -17,6 +17,7 @@ const Settings = ({settings: propSettings, onUpdate, onClose}) => {
 
     const [settings, setSettings] = useState({
         first_run: propSettings.first_run || true,
+        oled_mode: propSettings.oled_mode || false,
         lat: propSettings.lat || '',
         lon: propSettings.lon || '',
         locale: propSettings.locale || 'en',
@@ -28,7 +29,7 @@ const Settings = ({settings: propSettings, onUpdate, onClose}) => {
 
     const handleChnaged = e => {
         const newSettings = settings
-        newSettings[e.target.name] = e.target.value;
+        newSettings[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
         setSettings(newSettings)
     }
     const handleFloatChnaged = e => {
@@ -52,7 +53,7 @@ const Settings = ({settings: propSettings, onUpdate, onClose}) => {
         setSettings(newSettings)
     }
 
-    return <form className="flex flex-col fixed inset-0 overflow-y-auto bg-gray-900 text-gray-100 bg-opacity-80 backdrop-blur-sm z-50"
+    return <form className="flex flex-col fixed inset-0 overflow-y-auto bg-slate-900/80 text-gray-100 backdrop-blur-sm z-50"
                onSubmit={e => {
                   e.preventDefault();
 
@@ -117,32 +118,45 @@ const Settings = ({settings: propSettings, onUpdate, onClose}) => {
                 </fieldset>
             </div>
 
-            <fieldset className="w-1/2 space-y-4">
-                <legend className="text-xl text-emerald-400">Weather</legend>
+            <div className="w-1/2 space-y-4">
+                <fieldset className="space-y-4">
+                    <legend className="text-xl text-emerald-400">General</legend>
 
-                <div>
-                    <label>Unit</label>
-                    <select name="temp_unit" className="w-1/2" defaultValue={settings.temp_unit} onChange={handleChnaged}>
-                        <option value="c">Celsius</option>
-                        <option value="f">Farenheit</option>
-                    </select>
-                </div>
-
-                <fieldset className="">
-                    <legend>Location</legend>
-
-                    <div className="flex space-x-2">
-                        <div className="">
-                            <label className="text-sm text-slate-400">Latitude</label>
-                            <input type="text" name="lat" defaultValue={settings.lat} onChange={handleFloatChnaged} />
-                        </div>
-                        <div className="">
-                            <label className="text-sm text-slate-400">Longtitude</label>
-                            <input type="text" name="lon" defaultValue={settings.lon} onChange={handleFloatChnaged} />
-                        </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" className="me-2" name="oled_mode" defaultChecked={settings.oled_mode} onChange={handleChnaged} />
+                            Enabled OLED Mode
+                        </label>
                     </div>
                 </fieldset>
-            </fieldset>
+
+                <fieldset className="space-y-4">
+                    <legend className="text-xl text-emerald-400">Weather</legend>
+
+                    <div>
+                        <label>Unit</label>
+                        <select name="temp_unit" className="w-1/2" defaultValue={settings.temp_unit} onChange={handleChnaged}>
+                            <option value="c">Celsius</option>
+                            <option value="f">Farenheit</option>
+                        </select>
+                    </div>
+
+                    <fieldset className="">
+                        <legend>Location</legend>
+
+                        <div className="flex space-x-2">
+                            <div className="">
+                                <label className="text-sm text-slate-400">Latitude</label>
+                                <input type="text" name="lat" defaultValue={settings.lat} onChange={handleFloatChnaged} />
+                            </div>
+                            <div className="">
+                                <label className="text-sm text-slate-400">Longtitude</label>
+                                <input type="text" name="lon" defaultValue={settings.lon} onChange={handleFloatChnaged} />
+                            </div>
+                        </div>
+                    </fieldset>
+                </fieldset>
+            </div>
 
             <div className="w-full py-4">
                 <button type="submit" className="primary">

@@ -1,7 +1,8 @@
 import {useEffect, useState} from 'react';
 import {GetSettings, SetSettings as SetBackendSettings, CheckForUpdates} from "../wailsjs/go/main/App";
 import Clock from './clock';
-import Weather from './weather';
+import {CurrentConditions, HourlyForecast, DailyForecast} from './weather';
+import useWeather from './useWeather';
 import Settings from "./settings.jsx";
 import Calendar from "./calendar.jsx";
 import {Settings2} from "lucide-react";
@@ -49,6 +50,8 @@ const App = () => {
 //        }
 //    }
 
+    const {currentWeather, next8hours, sunrise, sunset} = useWeather(settings);
+
     if (isCheckingUpdates) {
         return <div className="fixed inset-0 flex flex-col justify-center items-center text-center">
             <div className="font-mono text-xs uppercase">Checking Updates...</div>
@@ -63,21 +66,27 @@ const App = () => {
     }
 
     return <div className="bg-cover bg-no-repeat fixed inset-0" /*style={{backgroundImage: `url(${bgImage})`}}*/>
-        <div className="flex p-8 bg-slate-900 fixed inset-0">
+        <div className={`flex p-4 ${settings.oled_mode ? 'bg-black' : 'bg-slate-900'} fixed inset-0`}>
             <button type="button" className="z-50 fixed top-4 right-4 rounded-full px-2.5 py-2 bg-slate-700/55 border-0" onClick={() => setShowSettings(true)}>
                 <Settings2 size={24}/>
             </button>
 
             {showSettings && <Settings settings={settings} onUpdate={newSettings => {setSettings(newSettings); setShowSettings(false)}} onClose={() => setShowSettings(false)} />}
 
-            <div className="max-w-[1280px] max-h-[720px] mx-auto my-auto flex items-start justify-around text-light font-sans gap-x-8">
-                <div className="py-0">
-                    <Clock settings={settings} /*onClockTick={updateBackgroundImage}*/ />
-                    <Calendar settings={settings} />
+            <div className="w-full h-full flex flex-col text-light font-sans gap-y-3">
+                <div className="flex items-start justify-between gap-x-8 flex-1 min-h-0 overflow-hidden">
+                    <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
+                        <Clock settings={settings} /*onClockTick={updateBackgroundImage}*/ />
+                        <div className="mt-2 min-w-0 overflow-hidden">
+                            <Calendar settings={settings} />
+                        </div>
+                    </div>
+                    <div className="shrink-0 flex flex-col items-end pr-20">
+                        <CurrentConditions settings={settings} currentWeather={currentWeather} sunrise={sunrise} sunset={sunset} />
+                    </div>
                 </div>
-                <div className="mt-2">
-                    <Weather settings={settings} />
-                </div>
+                <HourlyForecast settings={settings} currentWeather={currentWeather} next8hours={next8hours} />
+                <DailyForecast settings={settings} currentWeather={currentWeather} />
             </div>
         </div>
     </div>;
