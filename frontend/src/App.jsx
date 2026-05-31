@@ -66,18 +66,18 @@ const App = () => {
     }
 
     return <div className="bg-cover bg-no-repeat fixed inset-0" /*style={{backgroundImage: `url(${bgImage})`}}*/>
-        <div className={`flex p-4 ${settings.oled_mode ? 'bg-black' : 'bg-slate-900'} fixed inset-0`}>
+        <div className={`flex px-12 py-7 ${settings.oled_mode ? 'bg-black' : 'bg-slate-900'} fixed inset-0`}>
             <button type="button" className="z-50 fixed top-4 right-4 rounded-full px-2.5 py-2 bg-slate-700/55 border-0" onClick={() => setShowSettings(true)}>
                 <Settings2 size={24}/>
             </button>
 
             {showSettings && <Settings settings={settings} onUpdate={newSettings => {setSettings(newSettings); setShowSettings(false)}} onClose={() => setShowSettings(false)} />}
 
-            <div className="w-full h-full flex flex-col text-light font-sans gap-y-3">
-                <div className="flex items-start justify-between gap-x-8 flex-1 min-h-0 overflow-hidden">
-                    <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
+            <div className="w-full h-full flex flex-col text-light font-sans gap-y-4">
+                <div className="flex items-start justify-between gap-x-8 flex-1 min-h-0">
+                    <div className="flex flex-col min-w-0 flex-1">
                         <Clock settings={settings} /*onClockTick={updateBackgroundImage}*/ />
-                        <div className="mt-2 min-w-0 overflow-hidden">
+                        <div className="mt-1 min-w-0">
                             <Calendar settings={settings} />
                         </div>
                     </div>
@@ -85,8 +85,10 @@ const App = () => {
                         <CurrentConditions settings={settings} currentWeather={currentWeather} sunrise={sunrise} sunset={sunset} />
                     </div>
                 </div>
-                <HourlyForecast settings={settings} currentWeather={currentWeather} next8hours={next8hours} />
-                <DailyForecast settings={settings} currentWeather={currentWeather} />
+                <div className="shrink-0 flex flex-col gap-y-6">
+                    <HourlyForecast settings={settings} currentWeather={currentWeather} next8hours={next8hours} />
+                    <DailyForecast settings={settings} currentWeather={currentWeather} />
+                </div>
             </div>
         </div>
     </div>;

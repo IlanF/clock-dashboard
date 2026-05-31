@@ -58,7 +58,7 @@ const Calendar = ({settings}) => {
     }
 
     return <OfflineIndicator>
-        <div className="mx-1.5 mb-1 font-semibold text-slate-200 opacity-50">Upcoming</div>
+        <div className="mx-1.5 mb-1 text-xs font-semibold uppercase tracking-wide text-slate-200 opacity-50">Upcoming</div>
         <div className="mx-1.5 flex gap-x-6 overflow-hidden whitespace-nowrap">
             {events.slice(0, 5).map(event => {
                 const date = DateTime.fromISO(event.start);
