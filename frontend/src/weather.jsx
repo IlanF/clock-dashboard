@@ -36,7 +36,7 @@ export const HourlyForecast = ({settings, currentWeather, next8hours}) => {
     }
 
     return <OfflineIndicator>
-        <div className="flex justify-between gap-x-2">
+        <div className="grid grid-cols-8 gap-x-2">
             {next8hours.map(hour => <div key={hour.time.toISOTime()} className="flex flex-col items-center gap-y-1">
                 <span className="text-sm font-semibold text-slate-400">{hour.time.diffNow('hours') < 1 ? 'Now' : hour.time.toLocaleString(DateTime.TIME_24_SIMPLE)}</span>
                 <WeatherIcon type={hour.weather_code}/>
@@ -52,7 +52,7 @@ export const DailyForecast = ({settings, currentWeather}) => {
     }
 
     return <OfflineIndicator>
-        <div className="flex justify-between gap-x-2">
+        <div className="grid grid-cols-8 gap-x-2">
             {currentWeather.daily.time.map((date, index) => <div key={date} className="flex flex-col items-center gap-y-1">
                 <span className="text-sm font-semibold text-slate-400">{date === DateTime.now().setZone(currentWeather.timezone).toISODate() ? 'Today' : DateTime.fromISO(date, {zone: currentWeather.timezone}).setZone().toFormat('EEE')}</span>
                 <WeatherIcon type={currentWeather.daily.weather_code[index]}/>

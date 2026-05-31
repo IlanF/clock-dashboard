@@ -18,13 +18,13 @@ const Clock = ({settings, onClockTick = () => {}}) => {
     }, []);
 
     const weekdays = {
-        "Sun": 7,
-        "Mon": 1,
-        "Tue": 2,
-        "Wed": 3,
-        "Thu": 4,
-        "Fri": 5,
-        "Sat": 6,
+        "Sunday": 7,
+        "Monday": 1,
+        "Tuesday": 2,
+        "Wednesday": 3,
+        "Thursday": 4,
+        "Friday": 5,
+        "Saturday": 6,
     }
 
     const [hours, minutes] = currentTime.toLocaleString({
@@ -38,7 +38,7 @@ const Clock = ({settings, onClockTick = () => {}}) => {
 
     return <>
         <div className="flex justify-start items-center">
-            <div className="text-8xl">
+            <div className="text-7xl">
                 <span>{hours}</span>
                 <span className="relative bottom-2 font-sans animate-[pulse_2s_linear_infinite]">:</span>
                 <span>{minutes}</span>
